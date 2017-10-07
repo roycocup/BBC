@@ -6,6 +6,7 @@ import org.junit.runners.Suite;
 
 @Suite.SuiteClasses({
         TestMain.class,
+        TestInput.class,
 })
 
 public class TestSuite {
