@@ -10,3 +10,7 @@
 - output json
 - polish
 - deploy
+
+
+
+- GetInput should wait for entries until line is empty (\\n)
