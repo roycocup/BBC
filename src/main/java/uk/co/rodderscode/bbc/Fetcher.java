@@ -30,6 +30,8 @@ public class Fetcher {
             {
                 continue;
             }
+
+            entry = entry.replace(" ", "");
             output.add(entry);
         }
 
