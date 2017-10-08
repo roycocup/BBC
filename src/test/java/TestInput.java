@@ -81,6 +81,7 @@ public class TestInput{
                 "http://someurl\\nhttp://another.url\\n"
         };
 
+        Fetcher fetcher = new Fetcher();
 
         // testing valid entries
         for(String expected : validEntries)
@@ -90,11 +91,10 @@ public class TestInput{
             // setting the input stream with the entry
             System.setIn(inputStream);
 
-            Fetcher fetcher = new Fetcher();
 
             ArrayList<String> output = fetcher.getInput();
 
-            assertEquals ("["+expected.toString()+"]", output.toString());
+            assertEquals ("["+expected.toString().replace(" ", "")+"]", output.toString());
         }
 
     }
@@ -107,6 +107,8 @@ public class TestInput{
                 "100string-starting-with-number",
         };
 
+        Fetcher fetcher = new Fetcher();
+
         // testing invalid entries
         for(String expected : invalidEntries)
         {
@@ -115,12 +117,12 @@ public class TestInput{
             // setting the input stream with the entry
             System.setIn(inputStream);
 
-            Fetcher fetcher = new Fetcher();
-
             ArrayList<String> output = fetcher.getInput();
 
             assertEquals ("[]", output.toString());
         }
     }
+
+
 
 }
