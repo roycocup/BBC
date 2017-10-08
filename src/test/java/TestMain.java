@@ -3,6 +3,11 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.co.rodderscode.bbc.Fetcher;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 public class TestMain {
@@ -25,4 +30,26 @@ public class TestMain {
     }
 
 
+    @Test
+    public void linesInInputAreNotValidUrls()
+    {
+        String[] invalidEntries = {
+                "sdf://google.com\\n\\r",
+                "http://sdf.sdf.sdf.sdf\\n\\r"
+        };
+
+        String entries = Arrays.toString(invalidEntries);
+
+        InputStream inputStream = new ByteArrayInputStream(entries.getBytes());
+
+        System.setIn(inputStream);
+
+        Fetcher fetcher = new Fetcher();
+        fetcher.processEntries();
+
+
+        assert (fetcher.invalidUrls.contains(invalidEntries[0]));
+        assert (fetcher.invalidUrls.contains(invalidEntries[1]));
+
+    }
 }

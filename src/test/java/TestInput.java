@@ -48,8 +48,7 @@ public class TestInput{
         StringBuilder fakeInput = new StringBuilder();
 
         // fake input should be a string of newline separated strings
-        for(String line : listOfStrings)
-        {
+        for(String line : listOfStrings){
             fakeInput.append(line);
             fakeInput.append("\\n");
         }
@@ -84,8 +83,7 @@ public class TestInput{
         Fetcher fetcher = new Fetcher();
 
         // testing valid entries
-        for(String expected : validEntries)
-        {
+        for(String expected : validEntries){
             InputStream inputStream = new ByteArrayInputStream(expected.getBytes());
 
             // setting the input stream with the entry
@@ -110,9 +108,9 @@ public class TestInput{
         Fetcher fetcher = new Fetcher();
 
         // testing invalid entries
-        for(String expected : invalidEntries)
-        {
-            InputStream inputStream = new ByteArrayInputStream(expected.getBytes());
+        for(String entry : invalidEntries){
+
+            InputStream inputStream = new ByteArrayInputStream(entry.getBytes());
 
             // setting the input stream with the entry
             System.setIn(inputStream);
@@ -123,6 +121,13 @@ public class TestInput{
         }
     }
 
+    @Test
+    public void fieldGetsPopulatedAfterMethodCall()
+    {
+        Fetcher fetcher = new Fetcher();
+        fetcher.run();
+        assertNotNull(fetcher.inputs);
 
+    }
 
 }
