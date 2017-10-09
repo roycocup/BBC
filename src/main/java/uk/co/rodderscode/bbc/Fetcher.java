@@ -21,7 +21,7 @@ public class Fetcher {
     public void run()
     {
         clear();
-        System.out.println("Enter urls followed by newline and a single dot (.) on an empty line to end.");
+        System.out.println("Enter urls followed by newline. Leave an empty line to end.");
         this.inputs = getInput();
     }
 
@@ -39,6 +39,7 @@ public class Fetcher {
         ArrayList<String> output = new ArrayList<>();
 
         Scanner input = new Scanner( System.in );
+
 
         while(input.hasNextLine()){
             String entry = input.nextLine();

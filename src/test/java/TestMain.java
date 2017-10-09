@@ -34,11 +34,13 @@ public class TestMain {
     public void linesInInputAreNotValidUrls()
     {
         String[] invalidEntries = {
-                "sdf://google.com\\n\\r",
-                "http://sdf.sdf.sdf.sdf\\n\\r"
+                "sdf://google.com",
+                "http://sdf.sdf.sdf.sdf"
         };
 
-        String entries = Arrays.toString(invalidEntries);
+        String eol = System.getProperty("line.separator");
+
+        String entries = String.join(eol, invalidEntries);
 
         InputStream inputStream = new ByteArrayInputStream(entries.getBytes());
 
