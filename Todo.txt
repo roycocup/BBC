@@ -15,3 +15,4 @@ Todo
 
 - GetInput should wait for entries until line is empty (\\n)
 - make inputs with several items per line so they get broken first and then processed.
+- how to silence fetcher run on tests?

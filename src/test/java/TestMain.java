@@ -5,6 +5,7 @@ import uk.co.rodderscode.bbc.Fetcher;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -89,23 +90,51 @@ public class TestMain {
 
     }
 
-
     @Test
-    public void triageOfGoodAndBadUrlsIsSetToIndividualFields()
+    public void assertOnlyGoodUrlsPassValidation()
     {
-        String[] fakeEntries = {
-                "sdf://google.com",
-                "http://sdf.sdf.sdf.sdf",
-                "http://google.com",
-        };
 
-        InputStream inputStream = new ByteArrayInputStream(String.join(eol, fakeEntries).getBytes());
-        System.setIn(inputStream);
+        // bad ones
+        assertFalse (fetcher.validateUrl("lksdjfsflk"));
+        assertFalse (fetcher.validateUrl("htt://rodderscode.co.uk"));
+        assertFalse (fetcher.validateUrl("http://rodderscode.c"));
+        assertFalse (fetcher.validateUrl("http://rodderscode.java.cofres"));
+        assertFalse (fetcher.validateUrl("htp://bbc.co.uk"));
+        assertFalse (fetcher.validateUrl("ftp://bbc.co.uk"));
 
-        // set the inputs
-        fetcher.run();
-
+        //good ones
+        assert (fetcher.validateUrl("http://yahoo.com"));
+        assert (fetcher.validateUrl("http://bbc.co.uk"));
+        assert (fetcher.validateUrl("https://bbc.co.uk"));
+        assert (fetcher.validateUrl("http://bbc.co.uk/link/doesnt/exist"));
+        assert (fetcher.validateUrl("http://rodderscode.co.uk"));
+        assert (fetcher.validateUrl("http://www.rodderscode.co"));
+        
     }
+
+
+//    @Test
+//    public void triageOfGoodAndBadUrlsIsSetToIndividualFields()
+//    {
+//        String[] fakeEntries = {
+//                "sdf://google.com",
+//                "http://sdf.sdf.sdf.sdf",
+//                "http://google.com", // this should be valid
+//        };
+//
+//        InputStream inputStream = new ByteArrayInputStream(String.join(eol, fakeEntries).getBytes());
+//        System.setIn(inputStream);
+//
+//        // set the inputs
+//        fetcher.run();
+//
+//        assert (fetcher.invalidUrls.contains(fakeEntries[0]));
+//        assert (fetcher.invalidUrls.contains(fakeEntries[1]));
+//        assertFalse (fetcher.invalidUrls.contains(fakeEntries[2]));
+//
+//        assert (fetcher.validUrls.contains(fakeEntries[2]));
+//
+//    }
 
 
 }

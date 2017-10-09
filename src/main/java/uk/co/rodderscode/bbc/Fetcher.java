@@ -1,6 +1,7 @@
 package uk.co.rodderscode.bbc;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +11,12 @@ import java.util.regex.Pattern;
 
 public class Fetcher {
 
-    public ArrayList<String> invalidUrls;
+    // Where all user input will be stored
     public ArrayList<String> inputs;
+
+    public ArrayList<String> invalidUrls;
+    public ArrayList<String> validUrls;
+
 
     public static void main(String[] args)
     {
@@ -67,13 +72,13 @@ public class Fetcher {
     public void processEntries() {
 
         this.invalidUrls = getInput();
-
-//        String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
-//        UrlValidator urlValidator = new UrlValidator(schemes);
-//
-//        return urlValidator.isValid(url);
     }
 
 
+    public Boolean validateUrl(String url) {
+        String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
+        UrlValidator urlValidator = new UrlValidator(schemes);
 
+        return urlValidator.isValid(url);
+    }
 }
