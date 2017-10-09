@@ -23,11 +23,20 @@ public class Fetcher {
         new Fetcher().run();
     }
 
+    public void init()
+    {
+        this.inputs         = new ArrayList<>();
+        this.invalidUrls    = new ArrayList<>();
+        this.validUrls      = new ArrayList<>();
+    }
+
     public void run()
     {
+        init();
         clear();
         System.out.println("Enter urls followed by newline. Leave an empty line to end.");
         this.inputs = getInput();
+        processEntries();
     }
 
     // Clear the console screen
@@ -67,11 +76,23 @@ public class Fetcher {
         return output;
     }
 
-    // Will split all entries as good and bad
+    // Will split all entries as valid and invalid
     // relatively to the URL formation (URL Validator)
     public void processEntries() {
+        for (String url : this.inputs)
+        {
+            try{
+                if (validateUrl(url))
+                    this.validUrls.add(url);
+                else
+                    this.invalidUrls.add(url);    
+            } catch (Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
+            
+        }
 
-        this.invalidUrls = getInput();
     }
 
 

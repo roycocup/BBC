@@ -1,8 +1,5 @@
 Todo
 
-- start scanner loop
-- split into list
-- validate url
 - fetch urls
 - capture data
 - make calculations
@@ -16,3 +13,9 @@ Todo
 - GetInput should wait for entries until line is empty (\\n)
 - make inputs with several items per line so they get broken first and then processed.
 - how to silence fetcher run on tests?
+- init really just instantiates those variables? What ins, outs and states change?
+- processEntries may need refactoring
+    - should it throw exception if dependencies not met?
+    - Or should only execute under certain circumstances?
+    - who calls this?
+    - should the dependency be passed on
