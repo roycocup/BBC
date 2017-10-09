@@ -62,9 +62,18 @@ public class Fetcher {
         return output;
     }
 
-
+    // Will split all entries as good and bad
+    // relatively to the URL formation (URL Validator)
     public void processEntries() {
 
         this.invalidUrls = getInput();
+
+//        String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
+//        UrlValidator urlValidator = new UrlValidator(schemes);
+//
+//        return urlValidator.isValid(url);
     }
+
+
+
 }
