@@ -13,6 +13,7 @@ import static org.junit.Assert.*;
 public class TestMain {
 
     private Fetcher fetcher;
+    private String eol = System.getProperty("line.separator");
 
     @Before
     public void setup(){
@@ -38,15 +39,12 @@ public class TestMain {
                 "http://sdf.sdf.sdf.sdf",
         };
 
-        String eol = System.getProperty("line.separator");
-
         String entries = String.join(eol, invalidEntries);
 
         InputStream inputStream = new ByteArrayInputStream(entries.getBytes());
 
         System.setIn(inputStream);
 
-        Fetcher fetcher = new Fetcher();
         fetcher.processEntries();
 
 
@@ -65,15 +63,12 @@ public class TestMain {
                 "http://google.com",
         };
 
-        String eol = System.getProperty("line.separator");
-
         String entries = String.join(eol, fakeEntries);
 
         InputStream inputStream = new ByteArrayInputStream(entries.getBytes());
 
         System.setIn(inputStream);
 
-        Fetcher fetcher = new Fetcher();
         assertNull(fetcher.inputs);
 
 
@@ -92,6 +87,23 @@ public class TestMain {
             i++;
         }
 
+    }
+
+
+    @Test
+    public void triageOfGoodAndBadUrlsIsSetToIndividualFields()
+    {
+        String[] fakeEntries = {
+                "sdf://google.com",
+                "http://sdf.sdf.sdf.sdf",
+                "http://google.com",
+        };
+
+        InputStream inputStream = new ByteArrayInputStream(String.join(eol, fakeEntries).getBytes());
+        System.setIn(inputStream);
+
+        // set the inputs
+        fetcher.run();
 
     }
 
