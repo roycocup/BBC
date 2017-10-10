@@ -1,12 +1,7 @@
-import org.apache.http.protocol.ResponseServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.co.rodderscode.bbc.Fetcher;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -14,6 +9,7 @@ public class TestFetcher {
 
     private Fetcher fetcher;
     private String eol = System.getProperty("line.separator");
+    private String response;
 
     @Before
     public void setup()
@@ -22,6 +18,18 @@ public class TestFetcher {
 //        System.setOut(new PrintStream(new ByteArrayOutputStream()));
 
         this.fetcher = new Fetcher();
+
+        this.response = "HTTP/1.1 200 OK\n" +
+                "Date: Sun, 10 Oct 2010 23:26:07 GMT\n" +
+                "Server: Apache/2.2.8 (Ubuntu) mod_ssl/2.2.8 OpenSSL/0.9.8g\n" +
+                "Last-Modified: Sun, 26 Sep 2010 22:04:35 GMT\n" +
+                "ETag: \"45b6-834-49130cc1182c0\"\n" +
+                "Accept-Ranges: bytes\n" +
+                "Content-Length: 13\n" +
+                "Connection: close\n" +
+                "Content-Type: text/html\n" +
+                "\n" +
+                "Hello world!";
     }
 
 
@@ -35,8 +43,7 @@ public class TestFetcher {
     @Test
     public void testWeGetSomethingBack()
     {
-        String url = "http://rodderscode.co.uk";
-        String header = this.fetcher.getHttp(url);
+        String header = this.fetcher.getHttpHeaders(this.response);
 
         assertNotEquals (null, header);
     }
@@ -46,8 +53,7 @@ public class TestFetcher {
     @Test
     public void testResponseMayBeHttpResponse()
     {
-        String url = "http://rodderscode.co.uk";
-        String header = this.fetcher.getHttp(url);
+        String header = this.fetcher.getHttpHeaders(this.response);
 
         String[] fields = header.split(eol);
         // a well formed response needs to have more than one field
@@ -63,8 +69,7 @@ public class TestFetcher {
     @Test
     public void testResponseHasStatusLine()
     {
-        String url = "http://rodderscode.co.uk";
-        String header = this.fetcher.getHttp(url);
+        String header = this.fetcher.getHttpHeaders(this.response);
         String[] fields = header.split(eol);
 
         String[] statusLine = fields[0].split(" ");

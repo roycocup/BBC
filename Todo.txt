@@ -13,3 +13,7 @@ Micro:
 - init really just instantiates those variables? What ins, outs and states change?
 - move init to the constructor
 - Should "inputs" be final?
+
+
+Notes:
+https://datatracker.ietf.org/doc/rfc7230/?include_text=1
