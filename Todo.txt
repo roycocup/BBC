@@ -13,6 +13,7 @@ Micro:
 - init really just instantiates those variables? What ins, outs and states change?
 - move init to the constructor
 - Should "inputs" be final?
+- implement maps and reduce
 
 
 Notes:
