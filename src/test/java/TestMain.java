@@ -8,6 +8,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -35,7 +37,7 @@ public class TestMain {
         System.setOut(originalOut);
     }
 
-    public void insertAsInput(String[] arrayEntries)
+    private void insertAsInput(String[] arrayEntries)
     {
         String entries = String.join(eol, arrayEntries);
 
@@ -132,7 +134,7 @@ public class TestMain {
     @Test
     public void triageOfGoodAndBadUrlsIsSetToIndividualFields()
     {
-        String[] fakeEntries = {
+        String[] entries = {
                 //invalid ones
                 "sdf://google.com",
                 "http://sdf.sdf.sdf.sdf",
@@ -149,21 +151,41 @@ public class TestMain {
 
         };
 
-        insertAsInput(fakeEntries);
+        ArrayList<String> fakeEntries = new ArrayList<>();
+
+        Collections.addAll(fakeEntries, entries);
+
 
         // set the inputs
-        fetcher.run();
+        fetcher.sortEntries(fakeEntries);
 
+        // these should be here
+        assert (fetcher.invalidUrls.contains(fakeEntries.get(0)));
+        assert (fetcher.invalidUrls.contains(fakeEntries.get(1)));
+        assert (fetcher.invalidUrls.contains(fakeEntries.get(2)));
+        // not here
+        assertFalse (fetcher.validUrls.contains(fakeEntries.get(0)));
+        assertFalse (fetcher.validUrls.contains(fakeEntries.get(1)));
+        assertFalse (fetcher.validUrls.contains(fakeEntries.get(2)));
 
-        assert (fetcher.invalidUrls.contains(fakeEntries[0]));
-        assert (fetcher.invalidUrls.contains(fakeEntries[1]));
-        assert (fetcher.invalidUrls.contains(fakeEntries[2]));
+        // these are correct and should be here
+        assert (fetcher.validUrls.contains(fakeEntries.get(3)));
+        assert (fetcher.validUrls.contains(fakeEntries.get(4)));
+        assert (fetcher.validUrls.contains(fakeEntries.get(5)));
+        // not here
+        assertFalse (fetcher.invalidUrls.contains(fakeEntries.get(3)));
+        assertFalse (fetcher.invalidUrls.contains(fakeEntries.get(4)));
+        assertFalse (fetcher.invalidUrls.contains(fakeEntries.get(5)));
 
-//        assertFalse (fetcher.invalidUrls.contains(fakeEntries[0]));
-//        assertFalse (fetcher.invalidUrls.contains(fakeEntries[1]));
-//        assertFalse (fetcher.invalidUrls.contains(fakeEntries[2]));
+        // all values are captured to either one or the other lists
+        for (String entry : fakeEntries)
+        {
+            boolean found = false;
+            if (fetcher.validUrls.contains(entry) || fetcher.invalidUrls.contains(entry))
+                found = true;
 
-
+            assert (found);
+        }
     }
 
 
