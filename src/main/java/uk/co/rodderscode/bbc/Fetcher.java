@@ -21,16 +21,16 @@ public class Fetcher {
         new Fetcher().run();
     }
 
-    public void init()
+    public Fetcher()
     {
         this.inputs         = new ArrayList<>();
         this.invalidUrls    = new ArrayList<>();
         this.validUrls      = new ArrayList<>();
     }
 
+
     public void run()
     {
-        init();
         clear();
         System.out.println("Enter urls followed by newline. Leave an empty line to end.");
         this.inputs = getInput();

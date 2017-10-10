@@ -1,4 +1,4 @@
-Todo
+Macro:
 
 - fetch urls
 - capture data
@@ -9,13 +9,7 @@ Todo
 - deploy
 
 
-
-- GetInput should wait for entries until line is empty (\\n)
-- make inputs with several items per line so they get broken first and then processed.
-- how to silence fetcher run on tests?
+Micro:
 - init really just instantiates those variables? What ins, outs and states change?
-- processEntries may need refactoring
-    - should it throw exception if dependencies not met?
-    - Or should only execute under certain circumstances?
-    - who calls this?
-    - should the dependency be passed on
+- move init to the constructor
+- Should "inputs" be final?

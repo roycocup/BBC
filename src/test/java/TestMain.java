@@ -54,18 +54,9 @@ public class TestMain {
     @Test
     public void storingFieldsAreNullUntilInitIsCalled()
     {
-        assertEquals (null, fetcher.inputs);
-        assertEquals (null, fetcher.validUrls);
-        assertEquals (null, fetcher.invalidUrls);
-    }
-
-    @Test
-    public void callingInitInitializesStoringFields()
-    {
-        fetcher.init();
-        assertNotEquals (null, fetcher.inputs);
-        assertNotEquals (null, fetcher.validUrls);
-        assertNotEquals (null, fetcher.invalidUrls);
+        assertNotNull (fetcher.inputs);
+        assertNotNull (fetcher.validUrls);
+        assertNotNull (fetcher.invalidUrls);
     }
 
 
@@ -76,7 +67,6 @@ public class TestMain {
         invalidEntries.add("sdf://google.com");
         invalidEntries.add("http://sdf.sdf.sdf.sdf");
 
-        fetcher.init();
         fetcher.sortEntries(invalidEntries);
 
         assert (fetcher.invalidUrls.contains(invalidEntries.get(0)));
@@ -96,7 +86,7 @@ public class TestMain {
 
         insertAsInput(fakeEntries);
 
-        assertNull(fetcher.inputs);
+        assert(fetcher.inputs.size() < 1);
 
 
         // run the loop
