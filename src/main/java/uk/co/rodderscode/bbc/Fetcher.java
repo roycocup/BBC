@@ -1,12 +1,10 @@
 package uk.co.rodderscode.bbc;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.apache.commons.validator.routines.UrlValidator;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
-import java.util.regex.Pattern;
+
 
 
 public class Fetcher {
