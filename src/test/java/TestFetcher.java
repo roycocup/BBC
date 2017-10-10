@@ -96,4 +96,13 @@ public class TestFetcher {
 
     }
 
+    @Test
+    public void testGetBodyDoesNotIncludeHeaders()
+    {
+
+        String body = this.fetcher.getBody(this.response);
+
+        assertEquals("Hello world!", body);
+    }
+
 }
