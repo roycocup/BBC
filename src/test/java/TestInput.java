@@ -1,11 +1,9 @@
-import junit.framework.TestCase;
 import org.junit.Test;
-import uk.co.rodderscode.bbc.Fetcher;
+import uk.co.rodderscode.bbc.UrlStats;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -28,8 +26,8 @@ public class TestInput{
 
         System.setIn(inputStream);
 
-        Fetcher fetcher = new Fetcher();
-        ArrayList<String> inputText = fetcher.getInput();
+        UrlStats urlStats = new UrlStats();
+        ArrayList<String> inputText = urlStats.getInput();
 
 
         assertEquals(expected, inputText.toString().replace("[", "").replace("]", ""));
@@ -59,9 +57,9 @@ public class TestInput{
         System.setIn(inputStream);
 
 
-        Fetcher fetcher = new Fetcher();
+        UrlStats urlStats = new UrlStats();
 
-        ArrayList<String> output = fetcher.getInput();
+        ArrayList<String> output = urlStats.getInput();
 
         assertEquals ("["+fakeInput.toString()+"]", output.toString());
 
@@ -80,7 +78,7 @@ public class TestInput{
                 "http://someurl\\nhttp://another.url\\n"
         };
 
-        Fetcher fetcher = new Fetcher();
+        UrlStats urlStats = new UrlStats();
 
         // testing valid entries
         for(String expected : validEntries){
@@ -90,7 +88,7 @@ public class TestInput{
             System.setIn(inputStream);
 
 
-            ArrayList<String> output = fetcher.getInput();
+            ArrayList<String> output = urlStats.getInput();
 
             assertEquals ("["+expected.toString().replace(" ", "")+"]", output.toString());
         }
@@ -105,7 +103,7 @@ public class TestInput{
                 "100string-starting-with-number",
         };
 
-        Fetcher fetcher = new Fetcher();
+        UrlStats urlStats = new UrlStats();
 
         // testing invalid entries
         for(String entry : invalidEntries){
@@ -115,7 +113,7 @@ public class TestInput{
             // setting the input stream with the entry
             System.setIn(inputStream);
 
-            ArrayList<String> output = fetcher.getInput();
+            ArrayList<String> output = urlStats.getInput();
 
             assertEquals ("[]", output.toString());
         }
@@ -124,9 +122,9 @@ public class TestInput{
     @Test
     public void fieldGetsPopulatedAfterMethodCall()
     {
-        Fetcher fetcher = new Fetcher();
-        fetcher.run();
-        assertNotNull(fetcher.inputs);
+        UrlStats urlStats = new UrlStats();
+        urlStats.run();
+        assertNotNull(urlStats.inputs);
 
     }
 

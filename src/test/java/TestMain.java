@@ -1,21 +1,20 @@
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import uk.co.rodderscode.bbc.Fetcher;
+import uk.co.rodderscode.bbc.UrlStats;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.*;
 
 public class TestMain {
 
-    private Fetcher fetcher;
+    private UrlStats urlStats;
     private String eol = System.getProperty("line.separator");
     private PrintStream originalOut;
     private ByteArrayOutputStream collectedOut;
@@ -28,12 +27,12 @@ public class TestMain {
         System.setOut(new PrintStream(collectedOut));
 
         //main object being tested
-        fetcher = new Fetcher();
+        urlStats = new UrlStats();
     }
 
     @After
     public void tearDown(){
-        fetcher = null;
+        urlStats = null;
         System.setOut(originalOut);
     }
 
@@ -50,15 +49,15 @@ public class TestMain {
     @Test
     public void mainClassCanBeCreated()
     {
-        assertNotNull(fetcher);
+        assertNotNull(urlStats);
     }
 
     @Test
     public void storingFieldsAreNullUntilInitIsCalled()
     {
-        assertNotNull (fetcher.inputs);
-        assertNotNull (fetcher.validUrls);
-        assertNotNull (fetcher.invalidUrls);
+        assertNotNull (urlStats.inputs);
+        assertNotNull (urlStats.validUrls);
+        assertNotNull (urlStats.invalidUrls);
     }
 
 
@@ -69,10 +68,10 @@ public class TestMain {
         invalidEntries.add("sdf://google.com");
         invalidEntries.add("http://sdf.sdf.sdf.sdf");
 
-        fetcher.sortEntries(invalidEntries);
+        urlStats.sortEntries(invalidEntries);
 
-        assert (fetcher.invalidUrls.contains(invalidEntries.get(0)));
-        assert (fetcher.invalidUrls.contains(invalidEntries.get(1)));
+        assert (urlStats.invalidUrls.contains(invalidEntries.get(0)));
+        assert (urlStats.invalidUrls.contains(invalidEntries.get(1)));
 
     }
 
@@ -88,19 +87,19 @@ public class TestMain {
 
         insertAsInput(fakeEntries);
 
-        assert(fetcher.inputs.size() < 1);
+        assert(urlStats.inputs.size() < 1);
 
 
         // run the loop
-        fetcher.run();
+        urlStats.run();
         // exists?
-        assertNotNull(fetcher.inputs);
+        assertNotNull(urlStats.inputs);
 
         // is not empty?
-        assert(0 < fetcher.inputs.size());
+        assert(0 < urlStats.inputs.size());
 
         int i = 0;
-        for(String s : fetcher.inputs)
+        for(String s : urlStats.inputs)
         {
             assertEquals (s, fakeEntries[i]);
             i++;
@@ -135,31 +134,31 @@ public class TestMain {
 
 
         // set the inputs
-        fetcher.sortEntries(fakeEntries);
+        urlStats.sortEntries(fakeEntries);
 
         // these should be here
-        assert (fetcher.invalidUrls.contains(fakeEntries.get(0)));
-        assert (fetcher.invalidUrls.contains(fakeEntries.get(1)));
-        assert (fetcher.invalidUrls.contains(fakeEntries.get(2)));
+        assert (urlStats.invalidUrls.contains(fakeEntries.get(0)));
+        assert (urlStats.invalidUrls.contains(fakeEntries.get(1)));
+        assert (urlStats.invalidUrls.contains(fakeEntries.get(2)));
         // not here
-        assertFalse (fetcher.validUrls.contains(fakeEntries.get(0)));
-        assertFalse (fetcher.validUrls.contains(fakeEntries.get(1)));
-        assertFalse (fetcher.validUrls.contains(fakeEntries.get(2)));
+        assertFalse (urlStats.validUrls.contains(fakeEntries.get(0)));
+        assertFalse (urlStats.validUrls.contains(fakeEntries.get(1)));
+        assertFalse (urlStats.validUrls.contains(fakeEntries.get(2)));
 
         // these are correct and should be here
-        assert (fetcher.validUrls.contains(fakeEntries.get(3)));
-        assert (fetcher.validUrls.contains(fakeEntries.get(4)));
-        assert (fetcher.validUrls.contains(fakeEntries.get(5)));
+        assert (urlStats.validUrls.contains(fakeEntries.get(3)));
+        assert (urlStats.validUrls.contains(fakeEntries.get(4)));
+        assert (urlStats.validUrls.contains(fakeEntries.get(5)));
         // not here
-        assertFalse (fetcher.invalidUrls.contains(fakeEntries.get(3)));
-        assertFalse (fetcher.invalidUrls.contains(fakeEntries.get(4)));
-        assertFalse (fetcher.invalidUrls.contains(fakeEntries.get(5)));
+        assertFalse (urlStats.invalidUrls.contains(fakeEntries.get(3)));
+        assertFalse (urlStats.invalidUrls.contains(fakeEntries.get(4)));
+        assertFalse (urlStats.invalidUrls.contains(fakeEntries.get(5)));
 
         // all values are captured to either one or the other lists
         for (String entry : fakeEntries)
         {
             boolean found = false;
-            if (fetcher.validUrls.contains(entry) || fetcher.invalidUrls.contains(entry))
+            if (urlStats.validUrls.contains(entry) || urlStats.invalidUrls.contains(entry))
                 found = true;
 
             assert (found);

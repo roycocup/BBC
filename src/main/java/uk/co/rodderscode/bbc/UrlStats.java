@@ -1,13 +1,12 @@
 package uk.co.rodderscode.bbc;
 
 
-import org.apache.commons.validator.routines.UrlValidator;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 
 
-public class Fetcher {
+public class UrlStats {
 
     // Where all user input will be stored
     public ArrayList<String> inputs;
@@ -18,10 +17,10 @@ public class Fetcher {
 
     public static void main(String[] args)
     {
-        new Fetcher().run();
+        new UrlStats().run();
     }
 
-    public Fetcher()
+    public UrlStats()
     {
         this.inputs         = new ArrayList<>();
         this.invalidUrls    = new ArrayList<>();
