@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
         TestMain.class,
         TestInput.class,
         TestValidator.class,
+        TestFetcher.class,
 })
 
 public class TestSuite {
