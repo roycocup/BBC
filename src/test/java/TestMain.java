@@ -7,8 +7,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -43,7 +41,31 @@ public class TestMain {
         assertNotNull(fetcher);
     }
 
+    @Test
+    public void storingFieldsAreNullUntilInitIsCalled()
+    {
+        assertEquals (null, fetcher.inputs);
+        assertEquals (null, fetcher.validUrls);
+        assertEquals (null, fetcher.invalidUrls);
+    }
 
+    @Test
+    public void callingInitInitializesStoringFields()
+    {
+        fetcher.init();
+        assertNotEquals (null, fetcher.inputs);
+        assertNotEquals (null, fetcher.validUrls);
+        assertNotEquals (null, fetcher.invalidUrls);
+    }
+
+    public void insertAsInput(String[] arrayEntries)
+    {
+        String entries = String.join(eol, arrayEntries);
+
+        InputStream inputStream = new ByteArrayInputStream(entries.getBytes());
+
+        System.setIn(inputStream);
+    }
 
     @Test
     public void linesInInputAreNotValidUrls()
@@ -53,14 +75,10 @@ public class TestMain {
                 "http://sdf.sdf.sdf.sdf",
         };
 
-        String entries = String.join(eol, invalidEntries);
+        insertAsInput(invalidEntries);
 
-        InputStream inputStream = new ByteArrayInputStream(entries.getBytes());
-
-        System.setIn(inputStream);
-
-        fetcher.processEntries();
-
+        fetcher.init();
+        fetcher.sortEntries();
 
         assert (fetcher.invalidUrls.contains(invalidEntries[0]));
         assert (fetcher.invalidUrls.contains(invalidEntries[1]));
@@ -77,11 +95,7 @@ public class TestMain {
                 "http://google.com",
         };
 
-        String entries = String.join(eol, fakeEntries);
-
-        InputStream inputStream = new ByteArrayInputStream(entries.getBytes());
-
-        System.setIn(inputStream);
+        insertAsInput(fakeEntries);
 
         assertNull(fetcher.inputs);
 
@@ -146,8 +160,7 @@ public class TestMain {
 
         };
 
-        InputStream inputStream = new ByteArrayInputStream(String.join(eol, fakeEntries).getBytes());
-        System.setIn(inputStream);
+        insertAsInput(fakeEntries);
 
         // set the inputs
         fetcher.run();
