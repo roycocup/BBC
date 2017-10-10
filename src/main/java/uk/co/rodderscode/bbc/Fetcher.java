@@ -38,7 +38,7 @@ public class Fetcher {
     }
 
     // Clear the console screen
-    public static void clear()
+    private static void clear()
     {
         final String ANSI_CLS = "\u001b[2J";
         final String ANSI_HOME = "\u001b[H";
@@ -81,7 +81,7 @@ public class Fetcher {
         for (String url : entries)
         {
             try{
-                if (validateUrl(url))
+                if (Validator.validateUrl(url))
                     this.validUrls.add(url);
                 else
                     this.invalidUrls.add(url);    
@@ -95,10 +95,5 @@ public class Fetcher {
     }
 
 
-    public Boolean validateUrl(String url) {
-        String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
-        UrlValidator urlValidator = new UrlValidator(schemes);
 
-        return urlValidator.isValid(url);
-    }
 }

@@ -108,28 +108,6 @@ public class TestMain {
 
     }
 
-    @Test
-    public void assertOnlyGoodUrlsPassValidation()
-    {
-
-        // bad ones
-        assertFalse (fetcher.validateUrl("lksdjfsflk"));
-        assertFalse (fetcher.validateUrl("htt://rodderscode.co.uk"));
-        assertFalse (fetcher.validateUrl("http://rodderscode.c"));
-        assertFalse (fetcher.validateUrl("http://rodderscode.java.cofres"));
-        assertFalse (fetcher.validateUrl("htp://bbc.co.uk"));
-        assertFalse (fetcher.validateUrl("ftp://bbc.co.uk"));
-
-        //good ones
-        assert (fetcher.validateUrl("http://yahoo.com"));
-        assert (fetcher.validateUrl("http://bbc.co.uk"));
-        assert (fetcher.validateUrl("https://bbc.co.uk"));
-        assert (fetcher.validateUrl("http://bbc.co.uk/link/doesnt/exist"));
-        assert (fetcher.validateUrl("http://rodderscode.co.uk"));
-        assert (fetcher.validateUrl("http://www.rodderscode.co"));
-
-    }
-
 
     @Test
     public void triageOfGoodAndBadUrlsIsSetToIndividualFields()

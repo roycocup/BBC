@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         TestMain.class,
         TestInput.class,
+        TestValidator.class,
 })
 
 public class TestSuite {
