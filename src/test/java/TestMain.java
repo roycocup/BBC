@@ -4,6 +4,7 @@ import org.junit.Test;
 import uk.co.rodderscode.bbc.Fetcher;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -15,14 +16,25 @@ public class TestMain {
 
     private Fetcher fetcher;
     private String eol = System.getProperty("line.separator");
+    private PrintStream originalOut;
+    private ByteArrayOutputStream collectedOut;
 
     @Before
     public void setup(){
+        // this will silence the output to Stdout
+        originalOut = System.out;
+        collectedOut = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(collectedOut));
+
+        //main object being tested
         fetcher = new Fetcher();
     }
 
     @After
-    public void tearDown(){}
+    public void tearDown(){
+        fetcher = null;
+        System.setOut(originalOut);
+    }
 
 
     @Test
@@ -30,6 +42,7 @@ public class TestMain {
     {
         assertNotNull(fetcher);
     }
+
 
 
     @Test
