@@ -34,7 +34,7 @@ public class Fetcher {
         clear();
         System.out.println("Enter urls followed by newline. Leave an empty line to end.");
         this.inputs = getInput();
-        sortEntries();
+        sortEntries(this.inputs);
     }
 
     // Clear the console screen
@@ -76,11 +76,9 @@ public class Fetcher {
 
     // Will split all entries as valid and invalid
     // relatively to the URL formation (URL Validator)
-    public void sortEntries() {
-        if (this.inputs == null || this.inputs.size() < 1)
-            return;
+    public void sortEntries(ArrayList<String> entries) {
 
-        for (String url : this.inputs)
+        for (String url : entries)
         {
             try{
                 if (validateUrl(url))

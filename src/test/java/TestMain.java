@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -34,6 +35,15 @@ public class TestMain {
         System.setOut(originalOut);
     }
 
+    public void insertAsInput(String[] arrayEntries)
+    {
+        String entries = String.join(eol, arrayEntries);
+
+        InputStream inputStream = new ByteArrayInputStream(entries.getBytes());
+
+        System.setIn(inputStream);
+    }
+
 
     @Test
     public void mainClassCanBeCreated()
@@ -58,30 +68,19 @@ public class TestMain {
         assertNotEquals (null, fetcher.invalidUrls);
     }
 
-    public void insertAsInput(String[] arrayEntries)
-    {
-        String entries = String.join(eol, arrayEntries);
-
-        InputStream inputStream = new ByteArrayInputStream(entries.getBytes());
-
-        System.setIn(inputStream);
-    }
 
     @Test
     public void linesInInputAreNotValidUrls()
     {
-        String[] invalidEntries = {
-                "sdf://google.com",
-                "http://sdf.sdf.sdf.sdf",
-        };
-
-        insertAsInput(invalidEntries);
+        ArrayList<String> invalidEntries  = new ArrayList<>();
+        invalidEntries.add("sdf://google.com");
+        invalidEntries.add("http://sdf.sdf.sdf.sdf");
 
         fetcher.init();
-        fetcher.sortEntries();
+        fetcher.sortEntries(invalidEntries);
 
-        assert (fetcher.invalidUrls.contains(invalidEntries[0]));
-        assert (fetcher.invalidUrls.contains(invalidEntries[1]));
+        assert (fetcher.invalidUrls.contains(invalidEntries.get(0)));
+        assert (fetcher.invalidUrls.contains(invalidEntries.get(1)));
 
     }
 
