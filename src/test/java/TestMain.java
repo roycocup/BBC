@@ -107,6 +107,24 @@ public class TestMain {
 
     }
 
+    @Test
+    public void emptyLineBreaksInputStream()
+    {
+        String[] fakeEntries = {
+                "sdf://google.com",
+                "http://sdf.sdf.sdf.sdf",
+                "http://google.com",
+                "",
+                "http://this.shouldnotbeontthe.list",
+                "orthis",
+        };
+
+        insertAsInput(fakeEntries);
+        urlStats.run();
+
+        assertEquals(4, urlStats.inputs.size());
+    }
+
 
     @Test
     public void triageOfGoodAndBadUrlsIsSetToIndividualFields()

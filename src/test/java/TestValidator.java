@@ -6,6 +6,11 @@ import static org.junit.Assert.assertFalse;
 
 public class TestValidator {
 
+    @Test
+    public void canCreateValidator()
+    {
+        Validator v = new Validator();
+    }
 
     @Test
     public void assertOnlyGoodUrlsPassValidation()
