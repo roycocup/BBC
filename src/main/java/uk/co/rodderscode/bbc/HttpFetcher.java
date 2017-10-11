@@ -1,7 +1,5 @@
 package uk.co.rodderscode.bbc;
 
-import org.apache.http.client.methods.HttpGet;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,6 +10,7 @@ import java.util.*;
 public class HttpFetcher {
 
     final private String eol = System.getProperty("line.separator");
+    final public static String STATUSLINE = "status";
 
     public LinkedHashMap<String, String> getHttpHeaders(String response) {
 
@@ -25,7 +24,7 @@ public class HttpFetcher {
                 break;
 
             if (i == 0){
-                headers.put("status", line);
+                headers.put(STATUSLINE, line);
                 i++;
                 continue;
             }
@@ -52,7 +51,6 @@ public class HttpFetcher {
         try{
             URLConnection conn = new URL(url).openConnection();
             conn.getInputStream();
-            System.out.println(conn.getContent());
             return conn.getHeaderFields();
         } catch (MalformedURLException e){
             System.out.println(url + " is malformed. Ignoring.");

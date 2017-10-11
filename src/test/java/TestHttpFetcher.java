@@ -1,26 +1,31 @@
-import org.apache.http.HttpConnection;
+import com.sun.net.httpserver.HttpServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.co.rodderscode.bbc.HttpFetcher;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+
 import java.io.PrintStream;
 import java.net.*;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 
 import static org.junit.Assert.*;
 
 public class TestHttpFetcher {
 
-    final private boolean silent = true;
-    private HttpFetcher httpFetcher;
+    final static String HOST = "127.0.0.1";
+    final static int PORT = 9784;
+
+    final private boolean silent = false;
     final private String eol = System.getProperty("line.separator");
+
+    private HttpFetcher httpFetcher;
     private String response;
 
     @Before
@@ -152,22 +157,61 @@ public class TestHttpFetcher {
 
     @Test
     public void fakeUrlConnection() {
-        final String url = "127.0.0.1:8080";
+        final String url = HOST + ":" + PORT;
+        HttpServer server = null;
         try{
-            ServerSocket server = new ServerSocket(8080);
+            server = HttpServer.create(new InetSocketAddress(PORT), 0);
+            server.createContext("/", new ServerHandler());
+            server.start();
             Map<String, List<String>> headers = httpFetcher.fetch("http://" + url);
 
             assertNotNull(headers);
-            assertNotNull(headers.get("Content-Length"));
 
-            server.close();
-
+            server.stop(0);
         }catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try{
+                if (null != server)
+                    server.stop(0);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
 
+    @Test
+    public void getTransformRawResponseFromConnection() {
+        final String url = HOST + ":" + PORT;
+        HttpServer  server = null;
+        try{
+            server = HttpServer.create(new InetSocketAddress(PORT), 0);
+            server.createContext("/", new ServerHandler());
+            server.start();
+            Map<String, List<String>> headers = httpFetcher.fetch("http://" + url);
 
+            assertNotNull(headers);
+
+//            Iterator i = headers.entrySet().iterator();
+//            while(i.hasNext()){
+//                i.next();
+//            }
+
+            //System.out.println("hello: " + headers.get(HttpFetcher.STATUSLINE));
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try{
+                if (null != server)
+                    server.stop(0);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+    }
 
 
 }
