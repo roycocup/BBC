@@ -1,8 +1,11 @@
+import org.apache.http.client.methods.HttpGet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.co.rodderscode.bbc.Fetcher;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.LinkedHashMap;
 
 
@@ -18,7 +21,7 @@ public class TestFetcher {
     public void setup()
     {
         // this will silence the output to Stdout
-//        System.setOut(new PrintStream(new ByteArrayOutputStream()));
+        System.setOut(new PrintStream(new ByteArrayOutputStream()));
 
         this.fetcher = new Fetcher();
 
@@ -125,6 +128,22 @@ public class TestFetcher {
 
         assert (body.length() < 1);
 
+    }
+
+    // A request-line begins with a method token, followed by a single space
+    // (SP), the request-target, another single space (SP), the protocol
+    // version, and ends with CRLF.
+    // https://datatracker.ietf.org/doc/rfc7230/?include_text=1
+    @Test
+    public void makeAValidRequestBasedOnUrl()
+    {
+        String url = "http://rodderscode.co.uk";
+
+        HttpGet expected = new HttpGet(url);
+
+        HttpGet request = fetcher.getRequest(url);
+
+        assertEquals (expected.getURI(), request.getURI());
     }
 
 }

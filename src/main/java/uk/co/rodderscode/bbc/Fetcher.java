@@ -1,5 +1,7 @@
 package uk.co.rodderscode.bbc;
 
+import org.apache.http.client.methods.HttpGet;
+
 import java.util.*;
 
 
@@ -41,4 +43,12 @@ public class Fetcher {
 
         return "";
     }
+
+    public HttpGet getRequest(String url)
+    {
+        HttpGet httpGet = new HttpGet(url);
+        return httpGet;
+    }
+
+
 }
