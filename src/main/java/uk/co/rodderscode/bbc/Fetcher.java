@@ -1,31 +1,36 @@
 package uk.co.rodderscode.bbc;
 
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
 
 
 public class Fetcher {
 
     final private String eol = System.getProperty("line.separator");
 
-    public String getHttpHeaders(String response) {
+    public LinkedHashMap<String, String> getHttpHeaders(String response) {
 
-        StringBuilder headers = new StringBuilder();
+        LinkedHashMap<String, String> headers = new LinkedHashMap<>();
 
+        int i = 0;
         for (String line : response.split(eol))
         {
-            if(line.length() < 1)
+
+            if (line.length() < 1)
                 break;
-            headers.append(line);
-            headers.append(eol);
+
+            if (i == 0){
+                headers.put("status", line);
+                i++;
+                continue;
+            }
+
+            String[] keyvalue = line.split(":");
+            headers.put(keyvalue[0], keyvalue[1]);
+            i++;
+
         }
 
-        return headers.toString();
+        return headers;
     }
 
     public String getBody(String response) {
@@ -33,7 +38,6 @@ public class Fetcher {
         String[] splitResponse = response.split(eol+eol);
         if (splitResponse.length > 1)
             return splitResponse[1];
-
 
         return "";
     }

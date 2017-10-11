@@ -2,6 +2,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.co.rodderscode.bbc.Fetcher;
+
+import java.util.LinkedHashMap;
+
+
 import static org.junit.Assert.*;
 
 public class TestFetcher {
@@ -42,7 +46,7 @@ public class TestFetcher {
     @Test
     public void testWeGetSomethingBack()
     {
-        String header = this.fetcher.getHttpHeaders(this.response);
+        LinkedHashMap<String, String> header = this.fetcher.getHttpHeaders(this.response);
 
         assertNotEquals (null, header);
     }
@@ -52,10 +56,10 @@ public class TestFetcher {
     @Test
     public void testResponseMayBeHttpResponse()
     {
-        String header = this.fetcher.getHttpHeaders(this.response);
+        LinkedHashMap<String, String> header = this.fetcher.getHttpHeaders(this.response);
 
         // a well formed response needs to have more than one field
-        assert (header.split(eol).length > 1);
+        assert (header.size() > 1);
         
     }
 
@@ -67,13 +71,13 @@ public class TestFetcher {
     @Test
     public void testResponseHasStatusLine()
     {
-        String header = this.fetcher.getHttpHeaders(this.response);
-        String[] fields = header.split(eol);
+        LinkedHashMap<String, String> header = this.fetcher.getHttpHeaders(this.response);
 
-        String[] statusLine = fields[0].split(" ");
 
-        assert (statusLine[0].matches("^HTTP.*?"));
-        assert (statusLine[1].matches("[\\d]{3}"));
+        String statusLine = header.get("status");
+
+        assert (statusLine.matches("^HTTP.*?"));
+        assert (statusLine.matches(".*?[\\d]{3}.*?"));
     }
 
     // The response message consists of the following:
@@ -81,19 +85,9 @@ public class TestFetcher {
     @Test
     public void testResponseHeadersDoesNotIncludeBody()
     {
+        LinkedHashMap<String, String> header = this.fetcher.getHttpHeaders(this.response);
 
-        String header = this.fetcher.getHttpHeaders(this.response);
-        String[] fields = header.split(eol);
-
-        // lets check the last line is not preceeded by an empty line
-
-        // last line has SOMETHING
-        assertFalse (fields[fields.length - 1].length() < 10);
-        assert (fields[fields.length - 1].length() > 0);
-
-        // this line must have some length or the headers contains the message
-        assert (fields[fields.length - 2].length() > 0);
-
+        assertFalse (header.containsValue("Hello world!"));
     }
 
     @Test
@@ -103,6 +97,34 @@ public class TestFetcher {
         String body = this.fetcher.getBody(this.response);
 
         assertEquals("Hello world!", body);
+    }
+
+    @Test
+    public void testIfAnyBlankLinesGetIntoHeader()
+    {
+        String response = "HTTP/1.1 200 OK\n" +
+                "Content-Type: text/html\n" +
+                "\n" +
+                "This is an html message";
+
+        LinkedHashMap<String, String> headers = this.fetcher.getHttpHeaders(this.response);
+
+        assertFalse (headers.containsValue("\\n"));
+        assertFalse (headers.containsValue("This is an html message"));
+
+    }
+
+    @Test
+    public void ifNoBodyInResponseThenShouldReturnEmptyString()
+    {
+        String response = "HTTP/1.1 200 OK\n" +
+                "Content-Type: text/html\n" +
+                "\n";
+
+        String body = this.fetcher.getBody(response);
+
+        assert (body.length() < 1);
+
     }
 
 }
