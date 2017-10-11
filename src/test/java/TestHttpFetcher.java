@@ -1,19 +1,24 @@
+import org.apache.http.HttpConnection;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.co.rodderscode.bbc.HttpFetcher;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.net.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 
 import static org.junit.Assert.*;
 
 public class TestHttpFetcher {
 
+    final private boolean silent = true;
     private HttpFetcher httpFetcher;
     final private String eol = System.getProperty("line.separator");
     private String response;
@@ -22,7 +27,8 @@ public class TestHttpFetcher {
     public void setup()
     {
         // this will silence the output to Stdout
-        System.setOut(new PrintStream(new ByteArrayOutputStream()));
+        if (this.silent)
+            System.setOut(new PrintStream(new ByteArrayOutputStream()));
 
         this.httpFetcher = new HttpFetcher();
 
@@ -136,12 +142,32 @@ public class TestHttpFetcher {
     // version, and ends with CRLF.
     // https://datatracker.ietf.org/doc/rfc7230/?include_text=1
     @Test
-    public void makeACallToFakeUrlReturnsNull()
+    public void malformedUrlReturnsNull()
     {
         String url = "http://fakeUrl.com";
-        Map<String, List<String>> response = httpFetcher.fetch(url);
-
-        assertNull(response);
+        assertNull(httpFetcher.fetch(url));
     }
+
+
+
+    @Test
+    public void fakeUrlConnection() {
+        final String url = "127.0.0.1:8080";
+        try{
+            ServerSocket server = new ServerSocket(8080);
+            Map<String, List<String>> headers = httpFetcher.fetch("http://" + url);
+
+            assertNotNull(headers);
+            assertNotNull(headers.get("Content-Length"));
+
+            server.close();
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
 }

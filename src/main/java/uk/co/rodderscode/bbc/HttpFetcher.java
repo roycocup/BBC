@@ -52,6 +52,7 @@ public class HttpFetcher {
         try{
             URLConnection conn = new URL(url).openConnection();
             conn.getInputStream();
+            System.out.println(conn.getContent());
             return conn.getHeaderFields();
         } catch (MalformedURLException e){
             System.out.println(url + " is malformed. Ignoring.");
