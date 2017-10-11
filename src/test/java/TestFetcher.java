@@ -7,6 +7,8 @@ import uk.co.rodderscode.bbc.Fetcher;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 import static org.junit.Assert.*;
@@ -135,15 +137,12 @@ public class TestFetcher {
     // version, and ends with CRLF.
     // https://datatracker.ietf.org/doc/rfc7230/?include_text=1
     @Test
-    public void makeAValidRequestBasedOnUrl()
+    public void makeACallToFakeUrlReturnsNull()
     {
-        String url = "http://rodderscode.co.uk";
+        String url = "http://fakeUrl.com";
+        Map<String, List<String>> response = fetcher.fetch(url);
 
-        HttpGet expected = new HttpGet(url);
-
-        HttpGet request = fetcher.getRequest(url);
-
-        assertEquals (expected.getURI(), request.getURI());
+        assertNull(response);
     }
 
 }

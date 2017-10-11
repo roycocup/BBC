@@ -2,6 +2,10 @@ package uk.co.rodderscode.bbc;
 
 import org.apache.http.client.methods.HttpGet;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 
 
@@ -44,11 +48,17 @@ public class Fetcher {
         return "";
     }
 
-    public HttpGet getRequest(String url)
-    {
-        HttpGet httpGet = new HttpGet(url);
-        return httpGet;
+    public Map<String, List<String>> fetch(String url){
+        try{
+            URLConnection conn = new URL(url).openConnection();
+            conn.getInputStream();
+            return conn.getHeaderFields();
+        } catch (MalformedURLException e){
+            System.out.println(url + " is malformed. Ignoring.");
+        } catch (IOException e){
+            System.out.println("Unable to connect to " + url);
+        }
+
+        return null;
     }
-
-
 }
