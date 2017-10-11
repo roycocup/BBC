@@ -9,7 +9,7 @@ import java.net.URLConnection;
 import java.util.*;
 
 
-public class Fetcher {
+public class HttpFetcher {
 
     final private String eol = System.getProperty("line.separator");
 

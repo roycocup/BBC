@@ -1,8 +1,7 @@
-import org.apache.http.client.methods.HttpGet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import uk.co.rodderscode.bbc.Fetcher;
+import uk.co.rodderscode.bbc.HttpFetcher;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -13,9 +12,9 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class TestFetcher {
+public class TestHttpFetcher {
 
-    private Fetcher fetcher;
+    private HttpFetcher httpFetcher;
     final private String eol = System.getProperty("line.separator");
     private String response;
 
@@ -25,7 +24,7 @@ public class TestFetcher {
         // this will silence the output to Stdout
         System.setOut(new PrintStream(new ByteArrayOutputStream()));
 
-        this.fetcher = new Fetcher();
+        this.httpFetcher = new HttpFetcher();
 
         this.response = "HTTP/1.1 200 OK\n" +
                 "Date: Sun, 10 Oct 2010 23:26:07 GMT\n" +
@@ -44,14 +43,14 @@ public class TestFetcher {
     @After
     public void tearDown()
     {
-        this.fetcher = null;
+        this.httpFetcher = null;
     }
 
 
     @Test
     public void testWeGetSomethingBack()
     {
-        LinkedHashMap<String, String> header = this.fetcher.getHttpHeaders(this.response);
+        LinkedHashMap<String, String> header = this.httpFetcher.getHttpHeaders(this.response);
 
         assertNotEquals (null, header);
     }
@@ -61,7 +60,7 @@ public class TestFetcher {
     @Test
     public void testResponseMayBeHttpResponse()
     {
-        LinkedHashMap<String, String> header = this.fetcher.getHttpHeaders(this.response);
+        LinkedHashMap<String, String> header = this.httpFetcher.getHttpHeaders(this.response);
 
         // a well formed response needs to have more than one field
         assert (header.size() > 1);
@@ -76,7 +75,7 @@ public class TestFetcher {
     @Test
     public void testResponseHasStatusLine()
     {
-        LinkedHashMap<String, String> header = this.fetcher.getHttpHeaders(this.response);
+        LinkedHashMap<String, String> header = this.httpFetcher.getHttpHeaders(this.response);
 
 
         String statusLine = header.get("status");
@@ -90,7 +89,7 @@ public class TestFetcher {
     @Test
     public void testResponseHeadersDoesNotIncludeBody()
     {
-        LinkedHashMap<String, String> header = this.fetcher.getHttpHeaders(this.response);
+        LinkedHashMap<String, String> header = this.httpFetcher.getHttpHeaders(this.response);
 
         assertFalse (header.containsValue("Hello world!"));
     }
@@ -99,7 +98,7 @@ public class TestFetcher {
     public void testGetBodyDoesNotIncludeHeaders()
     {
 
-        String body = this.fetcher.getBody(this.response);
+        String body = this.httpFetcher.getBody(this.response);
 
         assertEquals("Hello world!", body);
     }
@@ -112,7 +111,7 @@ public class TestFetcher {
                 "\n" +
                 "This is an html message";
 
-        LinkedHashMap<String, String> headers = this.fetcher.getHttpHeaders(this.response);
+        LinkedHashMap<String, String> headers = this.httpFetcher.getHttpHeaders(this.response);
 
         assertFalse (headers.containsValue("\\n"));
         assertFalse (headers.containsValue("This is an html message"));
@@ -126,7 +125,7 @@ public class TestFetcher {
                 "Content-Type: text/html\n" +
                 "\n";
 
-        String body = this.fetcher.getBody(response);
+        String body = this.httpFetcher.getBody(response);
 
         assert (body.length() < 1);
 
@@ -140,7 +139,7 @@ public class TestFetcher {
     public void makeACallToFakeUrlReturnsNull()
     {
         String url = "http://fakeUrl.com";
-        Map<String, List<String>> response = fetcher.fetch(url);
+        Map<String, List<String>> response = httpFetcher.fetch(url);
 
         assertNull(response);
     }
