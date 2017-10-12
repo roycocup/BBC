@@ -5,6 +5,8 @@ import org.junit.Test;
 import uk.co.rodderscode.bbc.HttpFetcher;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.*;
 import java.util.*;
@@ -44,9 +46,8 @@ public class TestHttpFetcher {
     // (SP), the request-target, another single space (SP), the protocol
     // version, and ends with CRLF.
     // https://datatracker.ietf.org/doc/rfc7230/?include_text=1
-    @Test
-    public void malformedUrlReturnsNull()
-    {
+    @Test(expected = Exception.class)
+    public void fakeUrlsThrowException() throws Exception{
         String url = "http://fakeUrl.com";
         assertNull(httpFetcher.fetch(url));
     }

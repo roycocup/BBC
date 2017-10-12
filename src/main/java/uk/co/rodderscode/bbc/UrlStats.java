@@ -1,19 +1,21 @@
 package uk.co.rodderscode.bbc;
 
-
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.*;
+import org.json.JSONWriter;
 
 
 public class UrlStats {
 
     // Where all user input will be stored
     public ArrayList<String> inputs;
-    final public ArrayList finalStats = new ArrayList();
-    public HashMap<String, String> sitesInfo = new HashMap<>();
+    public ArrayList<HashMap<String, String>> finalStats = new ArrayList<>();
 
     public ArrayList<String> invalidUrls;
     public ArrayList<String> validUrls;
     private HttpFetcher httpFetcher;
+    final static private String eol = System.getProperty("line.separator");
 
 
     public static void main(String[] args)
@@ -36,6 +38,26 @@ public class UrlStats {
         System.out.println("Enter urls followed by newline. Leave an empty line to end.");
         this.inputs = getInput();
         sortEntries(this.inputs);
+        finalStats = collectInfo(this.validUrls);
+        display(finalStats);
+    }
+
+    private void display(ArrayList<HashMap<String, String>> finalStats) {
+        StringBuilder displayString = new StringBuilder();
+
+        JSONWriter jsonWriter = new JSONWriter(displayString).object();
+
+
+        jsonWriter.key("data").value(finalStats);
+
+        jsonWriter.endObject();
+
+        System.out.println(displayString.toString());
+
+//        for (HashMap<String, String> site : finalStats)
+//        {
+//
+//        }
     }
 
     // Clear the console screen
@@ -96,14 +118,35 @@ public class UrlStats {
     }
 
 
-    public void collectInfo(ArrayList<String> validUrls, HashMap<String, String> info) {
+    public ArrayList<HashMap<String, String>> collectInfo(ArrayList<String> validUrls) {
+
+        ArrayList<HashMap<String, String>> info = new ArrayList<>();
+        HashMap<String, String> sitesInfo = new HashMap<>();
 
         for(String url : validUrls)
         {
-            Map<String, List<String>> headers = this.httpFetcher.fetch(url);
-            String value = this.httpFetcher.getHeadersLine(headers, HttpFetcher.STATUSLINE);
-            info.put(HttpFetcher.STATUSLINE, value);
+            sitesInfo.put("url", url);
+            try{
+                Map<String, List<String>> headers = this.httpFetcher.fetch(url);
+
+                String statusLine = this.httpFetcher.getHeadersLine(headers, HttpFetcher.STATUSLINE);
+                sitesInfo.put(HttpFetcher.STATUSLINE, statusLine);
+
+                String date = this.httpFetcher.getHeadersLine(headers, "Date");
+                sitesInfo.put("Date", date);
+
+                String length = this.httpFetcher.getHeadersLine(headers, "Content-Length");
+                sitesInfo.put("Content-Length", length);
+            } catch (MalformedURLException e) {
+                sitesInfo.put("error", "Malformed URL");
+            } catch (IOException e){
+                sitesInfo.put("error", "Unable to contact url URL");
+            }
+
+
+            info.add(sitesInfo);
         }
 
+        return info;
     }
 }

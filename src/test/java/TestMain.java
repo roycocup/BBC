@@ -215,21 +215,9 @@ public class TestMain {
     }
 
     @Test
-    public void testStorageFieldForInfo()
+    public void collectInfoForEachValidSite() throws Exception
     {
-        try{
-            Field field = urlStats.getClass().getDeclaredField("sitesInfo");
-            assertNotNull (field);
-            assertNotNull(urlStats.sitesInfo);
-        } catch (NoSuchFieldException e) {
-            assert (false);
-        }
-    }
-
-    @Test
-    public void collectInfoForEachValidSite()
-    {
-        HashMap<String, String> info = new HashMap<>();
+        ArrayList<HashMap<String, String>> info;
 
         String[] entries = {
                 "http://google.com",
@@ -251,15 +239,13 @@ public class TestMain {
 
 
         // call
-        urlStats.collectInfo(validUrls, info);
+        info = urlStats.collectInfo(validUrls);
 
         // was it called as many as the entries?
         verify(mockFetcher, times(entries.length)).fetch(anyString());
 
         // does the info have a size?
         assert (info.size() > 0);
-
-
     }
 
 }

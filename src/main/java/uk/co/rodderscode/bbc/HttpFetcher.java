@@ -1,5 +1,6 @@
 package uk.co.rodderscode.bbc;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,44 +14,46 @@ public class HttpFetcher {
     final public static String STATUSLINE = "status";
 
 
-    public Map<String, List<String>> fetch(String url){
-        try{
-            URLConnection conn = new URL(url).openConnection();
-            conn.getInputStream();
-            return conn.getHeaderFields();
-        } catch (MalformedURLException e){
-            System.out.println(url + " is malformed. Ignoring.");
-        } catch (IOException e){
-            System.out.println("Unable to connect to " + url);
-        }
+    public Map<String, List<String>> fetch(String url)
+            throws MalformedURLException, IOException, FileNotFoundException
+    {
 
-        return null;
+        URLConnection conn = new URL(url).openConnection();
+        conn.getInputStream();
+        return conn.getHeaderFields();
     }
 
 
-    public String getHeadersLine(Map<String, List<String>> headers, String keyName) {
+    public String getHeadersLine(Map<String, List<String>> headers, String keyName){
         String line = null;
 
         for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-
+            
             String key = entry.getKey();
+            String value = entry.getValue().toString();
 
             // bypass status line
             if (key == null){
                 if (keyName.equals(HttpFetcher.STATUSLINE))
-                    line = entry.getValue().toString();
-                continue;
+                    line = value;
+                break;
             }
 
             if (key.equals(keyName)){
-                line = entry.getValue().toString();
+                line = value;
+                break;
             }
 
         }
 
-        if(line.length() > 0)
-            line = line.replace("[", "").replace("]", "");
+        try{
+            if(line.length() > 0)
+                line = line.replace("[", "").replace("]", "");
+        } catch (Exception e) {
+            System.out.println("Line is null on: " + keyName);
+        }
 
         return line;
+
     }
 }
