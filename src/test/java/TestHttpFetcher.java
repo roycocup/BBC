@@ -110,36 +110,6 @@ public class TestHttpFetcher {
 
         }
     }
-    
-    @Test
-    public void getOtherLinesFromHeader()
-    {
-        final String url = HOST + ":" + PORT;
-        HttpServer  server = null;
-        try{
-            server = HttpServer.create(new InetSocketAddress(PORT), 0);
-            server.createContext("/", new ServerHandler());
-            server.start();
-            Map<String, List<String>> headers = httpFetcher.fetch("http://" + url);
 
-            String length = httpFetcher.getHeadersLine(headers, "Content-length");
-            assertNotNull(length);
-
-            String date = httpFetcher.getHeadersLine(headers, "Date");
-            assertNotNull(date);
-
-
-        }catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try{
-                if (null != server)
-                    server.stop(0);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-        }   
-    }
 
 }

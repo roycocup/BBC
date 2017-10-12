@@ -27,6 +27,10 @@ public class HttpFetcher {
     public String getHeadersLine(Map<String, List<String>> headers, String keyName){
         String line = null;
 
+
+        // tou a procura de date mas o array ainda so da o null da statusline.
+        // e vai pra exepcao
+
         for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
             
             String key = entry.getKey();
@@ -36,12 +40,12 @@ public class HttpFetcher {
             if (key == null){
                 if (keyName.equals(HttpFetcher.STATUSLINE))
                     line = value;
-                break;
+                continue;
             }
 
             if (key.equals(keyName)){
                 line = value;
-                break;
+                continue;
             }
 
         }

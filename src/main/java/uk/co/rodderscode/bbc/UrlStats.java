@@ -53,11 +53,6 @@ public class UrlStats {
         jsonWriter.endObject();
 
         System.out.println(displayString.toString());
-
-//        for (HashMap<String, String> site : finalStats)
-//        {
-//
-//        }
     }
 
     // Clear the console screen
@@ -121,11 +116,12 @@ public class UrlStats {
     public ArrayList<HashMap<String, String>> collectInfo(ArrayList<String> validUrls) {
 
         ArrayList<HashMap<String, String>> info = new ArrayList<>();
-        HashMap<String, String> sitesInfo = new HashMap<>();
 
         for(String url : validUrls)
         {
+            HashMap<String, String> sitesInfo = new HashMap<>();
             sitesInfo.put("url", url);
+
             try{
                 Map<String, List<String>> headers = this.httpFetcher.fetch(url);
 
@@ -148,5 +144,25 @@ public class UrlStats {
         }
 
         return info;
+    }
+
+    public void collectStats()
+    {
+        HashMap<String, Integer> stats = new HashMap<>();
+        for(HashMap site : finalStats)
+        {
+
+            // it may be one of the invalid sites
+            if (site.containsKey("Status_code"))
+            {
+                String code = (String) site.get("Status_code");
+                if (stats.containsKey(code)){
+                    int counter = stats.get(code);
+                    stats.put(code, ++counter);
+                } else
+                    stats.put(code,  1);
+            }
+
+        }
     }
 }
