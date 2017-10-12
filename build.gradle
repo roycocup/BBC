@@ -5,7 +5,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 
-mainClassName = 'uk.co.rodderscode.bbc.Fetcher'
+mainClassName = 'uk.co.rodderscode.bbc.UrlStats'
 sourceSets.main.java.srcDirs = ['src/main/java']
 
 repositories {
@@ -13,7 +13,7 @@ repositories {
 }
 
 jar {
-    baseName = 'BBCFetcher'
+    baseName = 'UrlStats'
     version =  '0.0.1'
 }
 
