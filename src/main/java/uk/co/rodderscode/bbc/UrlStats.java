@@ -42,7 +42,6 @@ public class UrlStats {
         this.inputs = getInput();
         sortEntries(this.inputs);
         finalStats = collectInfo(this.validUrls);
-        collectStats();
         display(finalStats);
     }
 
