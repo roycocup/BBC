@@ -3,6 +3,9 @@ package uk.co.rodderscode.bbc;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.json.JSONWriter;
 
 
@@ -39,6 +42,7 @@ public class UrlStats {
         this.inputs = getInput();
         sortEntries(this.inputs);
         finalStats = collectInfo(this.validUrls);
+        collectStats();
         display(finalStats);
     }
 
@@ -153,9 +157,13 @@ public class UrlStats {
         {
 
             // it may be one of the invalid sites
-            if (site.containsKey("Status_code"))
+            if (site.containsKey(HttpFetcher.STATUSLINE))
             {
-                String code = (String) site.get("Status_code");
+                String line = (String) site.get(HttpFetcher.STATUSLINE);
+                Pattern pattern = Pattern.compile(".*?([\\d]+).*?");
+                Matcher matcher = pattern.matcher(line);
+                String code = matcher.group(1);
+
                 if (stats.containsKey(code)){
                     int counter = stats.get(code);
                     stats.put(code, ++counter);

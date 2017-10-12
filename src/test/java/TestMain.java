@@ -248,4 +248,49 @@ public class TestMain {
         assert (info.size() > 0);
     }
 
+//    @Test
+//    public void testCollectedInfoIsCorrect() throws IOException {
+//        ArrayList<HashMap<String, String>> info;
+//
+//        String[] entries = {
+//                "http://site1.com",
+//                "https://site2.com",
+//        };
+//        ArrayList<String> validUrls = new ArrayList<>(Arrays.asList(entries));
+//
+//
+//        Map<String, List<String>> headersSite1 = new HashMap<>();
+//        headersSite1.put(null, new ArrayList<>(Arrays.asList("HTTP/1.1 200 OK")));
+//        headersSite1.put("Date", new ArrayList<>(Arrays.asList("Thu, 12 Oct 2017 15:04:24 GMT")));
+//        headersSite1.put("Content-Length", new ArrayList<>(Arrays.asList("4327")));
+//
+//        Map<String, List<String>> headersSite2 = new HashMap<>();
+//        headersSite1.put(null, new ArrayList<>(Arrays.asList("HTTP/1.1 200 OK")));
+//        headersSite1.put("Date", new ArrayList<>(Arrays.asList("Thu, 10 Oct 2017 13:00:00 GMT")));
+//        headersSite1.put("Content-Length", new ArrayList<>(Arrays.asList("10")));
+//
+//
+//        when(mockFetcher.fetch(validUrls.get(0)))
+//                .thenReturn(headersSite1);
+//        when(mockFetcher.fetch(validUrls.get(1)))
+//                .thenReturn(headersSite2);
+//
+//
+//        // collect all info
+//        info = urlStats.collectInfo(validUrls);
+//
+//        // was it called as many as the entries?
+//        verify(mockFetcher, times(entries.length)).fetch(anyString());
+//
+//        // does the info have a size?
+//        assert (info.size() > 0);
+//
+//        assertEquals("HTTP/1.1 200 OK", info.get(HttpFetcher.STATUSLINE));
+//
+//        assertEquals("Thu, 12 Oct 2017 15:04:24 GMT", info.get("Date"));
+//
+//        assertEquals("4327", info.get("Content-Length"));
+//
+//    }
+
 }
