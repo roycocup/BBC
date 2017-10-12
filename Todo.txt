@@ -1,6 +1,5 @@
 Macro:
 
-- fetch urls
 - capture data
 - make calculations
 - compose maps
@@ -10,11 +9,9 @@ Macro:
 
 
 Micro:
-- init really just instantiates those variables? What ins, outs and states change?
-- move init to the constructor
+- agreggate the data and make calculations on global counters.
 - Should "inputs" be final?
 - implement maps and reduce
-- headers must be a k:v pair
 
 
 Notes:

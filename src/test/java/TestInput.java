@@ -1,4 +1,6 @@
+import org.junit.Before;
 import org.junit.Test;
+import uk.co.rodderscode.bbc.HttpFetcher;
 import uk.co.rodderscode.bbc.UrlStats;
 
 import java.io.ByteArrayInputStream;
@@ -6,9 +8,17 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class TestInput{
 
+    private HttpFetcher mockFetcher;
+
+    @Before
+    public void setup()
+    {
+        mockFetcher = mock(HttpFetcher.class);
+    }
 
     /**
      *
@@ -26,7 +36,7 @@ public class TestInput{
 
         System.setIn(inputStream);
 
-        UrlStats urlStats = new UrlStats();
+        UrlStats urlStats = new UrlStats(mockFetcher);
         ArrayList<String> inputText = urlStats.getInput();
 
 
@@ -57,7 +67,7 @@ public class TestInput{
         System.setIn(inputStream);
 
 
-        UrlStats urlStats = new UrlStats();
+        UrlStats urlStats = new UrlStats(mockFetcher);
 
         ArrayList<String> output = urlStats.getInput();
 
@@ -78,7 +88,7 @@ public class TestInput{
                 "http://someurl\\nhttp://another.url\\n"
         };
 
-        UrlStats urlStats = new UrlStats();
+        UrlStats urlStats = new UrlStats(mockFetcher);
 
         // testing valid entries
         for(String expected : validEntries){
@@ -90,7 +100,7 @@ public class TestInput{
 
             ArrayList<String> output = urlStats.getInput();
 
-            assertEquals ("["+expected.toString().replace(" ", "")+"]", output.toString());
+            assertEquals ("["+expected.replace(" ", "")+"]", output.toString());
         }
 
     }
@@ -103,7 +113,7 @@ public class TestInput{
                 "100string-starting-with-number",
         };
 
-        UrlStats urlStats = new UrlStats();
+        UrlStats urlStats = new UrlStats(mockFetcher);
 
         // testing invalid entries
         for(String entry : invalidEntries){
@@ -122,7 +132,7 @@ public class TestInput{
     @Test
     public void fieldGetsPopulatedAfterMethodCall()
     {
-        UrlStats urlStats = new UrlStats();
+        UrlStats urlStats = new UrlStats(mockFetcher);
         urlStats.run();
         assertNotNull(urlStats.inputs);
 

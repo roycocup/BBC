@@ -1,30 +1,32 @@
 package uk.co.rodderscode.bbc;
 
 
-import java.util.ArrayList;
-import java.util.Scanner;
-
+import java.util.*;
 
 
 public class UrlStats {
 
     // Where all user input will be stored
     public ArrayList<String> inputs;
+    final public ArrayList finalStats = new ArrayList();
+    public HashMap<String, String> sitesInfo = new HashMap<>();
 
     public ArrayList<String> invalidUrls;
     public ArrayList<String> validUrls;
+    private HttpFetcher httpFetcher;
 
 
     public static void main(String[] args)
     {
-        new UrlStats().run();
+        new UrlStats(new HttpFetcher()).run();
     }
 
-    public UrlStats()
+    public UrlStats(HttpFetcher fetcher)
     {
         this.inputs         = new ArrayList<>();
         this.invalidUrls    = new ArrayList<>();
         this.validUrls      = new ArrayList<>();
+        this.httpFetcher    = fetcher;
     }
 
 
@@ -94,5 +96,14 @@ public class UrlStats {
     }
 
 
+    public void collectInfo(ArrayList<String> validUrls, HashMap<String, String> info) {
 
+        for(String url : validUrls)
+        {
+            Map<String, List<String>> headers = this.httpFetcher.fetch(url);
+            String value = this.httpFetcher.getHeadersLine(headers, HttpFetcher.STATUSLINE);
+            info.put(HttpFetcher.STATUSLINE, value);
+        }
+
+    }
 }
