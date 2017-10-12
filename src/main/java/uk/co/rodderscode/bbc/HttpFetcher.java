@@ -1,9 +1,5 @@
 package uk.co.rodderscode.bbc;
 
-import org.apache.commons.collections.IterableMap;
-import org.apache.commons.collections.MapIterator;
-import org.apache.commons.collections.map.HashedMap;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;

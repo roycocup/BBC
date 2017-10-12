@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.co.rodderscode.bbc.HttpFetcher;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.net.*;
 import java.util.*;
 
@@ -24,7 +26,7 @@ public class TestHttpFetcher {
     public void setup()
     {
         // this will silence the output to Stdout
-//        System.setOut(new PrintStream(new ByteArrayOutputStream()));
+        System.setOut(new PrintStream(new ByteArrayOutputStream()));
 
         this.httpFetcher = new HttpFetcher();
     }
