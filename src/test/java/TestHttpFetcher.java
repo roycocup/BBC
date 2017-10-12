@@ -4,50 +4,29 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.co.rodderscode.bbc.HttpFetcher;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-
-import java.io.PrintStream;
 import java.net.*;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 import static org.junit.Assert.*;
 
 public class TestHttpFetcher {
 
-    final static String HOST = "127.0.0.1";
-    final static int PORT = 9784;
+    final private static String HOST = "127.0.0.1";
+    final private static int PORT = 9784;
 
-    final private boolean silent = false;
     final private String eol = System.getProperty("line.separator");
 
     private HttpFetcher httpFetcher;
-    private String response;
+    private HashMap<String, List<String>> response;
 
     @Before
     public void setup()
     {
         // this will silence the output to Stdout
-        if (this.silent)
-            System.setOut(new PrintStream(new ByteArrayOutputStream()));
+//        System.setOut(new PrintStream(new ByteArrayOutputStream()));
 
         this.httpFetcher = new HttpFetcher();
-
-        this.response = "HTTP/1.1 200 OK\n" +
-                "Date: Sun, 10 Oct 2010 23:26:07 GMT\n" +
-                "Server: Apache/2.2.8 (Ubuntu) mod_ssl/2.2.8 OpenSSL/0.9.8g\n" +
-                "Last-Modified: Sun, 26 Sep 2010 22:04:35 GMT\n" +
-                "ETag: \"45b6-834-49130cc1182c0\"\n" +
-                "Accept-Ranges: bytes\n" +
-                "Content-Length: 13\n" +
-                "Connection: close\n" +
-                "Content-Type: text/html\n" +
-                "\n" +
-                "Hello world!";
     }
 
 
@@ -58,89 +37,6 @@ public class TestHttpFetcher {
     }
 
 
-    @Test
-    public void testWeGetSomethingBack()
-    {
-        LinkedHashMap<String, String> header = this.httpFetcher.getHttpHeaders(this.response);
-
-        assertNotEquals (null, header);
-    }
-
-    //  Header fields are colon-separated name-value pairs in clear-text string format,
-    // terminated by a carriage return (CR) and line feed (LF) character sequence.
-    @Test
-    public void testResponseMayBeHttpResponse()
-    {
-        LinkedHashMap<String, String> header = this.httpFetcher.getHttpHeaders(this.response);
-
-        // a well formed response needs to have more than one field
-        assert (header.size() > 1);
-        
-    }
-
-    // The first line of a response message is the status-line, consisting
-    // of the protocol version, a space (SP), the status code, another
-    // space, a possibly empty textual phrase describing the status code,
-    // and ending with CRLF.
-    // e,g status-line = HTTP-version SP status-code SP reason-phrase CRLF
-    @Test
-    public void testResponseHasStatusLine()
-    {
-        LinkedHashMap<String, String> header = this.httpFetcher.getHttpHeaders(this.response);
-
-
-        String statusLine = header.get("status");
-
-        assert (statusLine.matches("^HTTP.*?"));
-        assert (statusLine.matches(".*?[\\d]{3}.*?"));
-    }
-
-    // The response message consists of the following:
-    // Status-line, headers, an empty line, Optional HTTP message body data
-    @Test
-    public void testResponseHeadersDoesNotIncludeBody()
-    {
-        LinkedHashMap<String, String> header = this.httpFetcher.getHttpHeaders(this.response);
-
-        assertFalse (header.containsValue("Hello world!"));
-    }
-
-    @Test
-    public void testGetBodyDoesNotIncludeHeaders()
-    {
-
-        String body = this.httpFetcher.getBody(this.response);
-
-        assertEquals("Hello world!", body);
-    }
-
-    @Test
-    public void testIfAnyBlankLinesGetIntoHeader()
-    {
-        String response = "HTTP/1.1 200 OK\n" +
-                "Content-Type: text/html\n" +
-                "\n" +
-                "This is an html message";
-
-        LinkedHashMap<String, String> headers = this.httpFetcher.getHttpHeaders(this.response);
-
-        assertFalse (headers.containsValue("\\n"));
-        assertFalse (headers.containsValue("This is an html message"));
-
-    }
-
-    @Test
-    public void ifNoBodyInResponseThenShouldReturnEmptyString()
-    {
-        String response = "HTTP/1.1 200 OK\n" +
-                "Content-Type: text/html\n" +
-                "\n";
-
-        String body = this.httpFetcher.getBody(response);
-
-        assert (body.length() < 1);
-
-    }
 
     // A request-line begins with a method token, followed by a single space
     // (SP), the request-target, another single space (SP), the protocol
@@ -181,8 +77,9 @@ public class TestHttpFetcher {
         }
     }
 
+
     @Test
-    public void getTransformRawResponseFromConnection() {
+    public void getStatusLineFromHeaders() {
         final String url = HOST + ":" + PORT;
         HttpServer  server = null;
         try{
@@ -193,12 +90,10 @@ public class TestHttpFetcher {
 
             assertNotNull(headers);
 
-//            Iterator i = headers.entrySet().iterator();
-//            while(i.hasNext()){
-//                i.next();
-//            }
+            String statusLine = httpFetcher.getHeadersLine(headers, HttpFetcher.STATUSLINE);
 
-            //System.out.println("hello: " + headers.get(HttpFetcher.STATUSLINE));
+            assert (statusLine.matches("^HTTP.*?"));
+            assert (statusLine.matches(".*?[\\d]{3}.*?"));
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -212,6 +107,36 @@ public class TestHttpFetcher {
 
         }
     }
+    
+    @Test
+    public void getOtherLinesFromHeader()
+    {
+        final String url = HOST + ":" + PORT;
+        HttpServer  server = null;
+        try{
+            server = HttpServer.create(new InetSocketAddress(PORT), 0);
+            server.createContext("/", new ServerHandler());
+            server.start();
+            Map<String, List<String>> headers = httpFetcher.fetch("http://" + url);
 
+            String length = httpFetcher.getHeadersLine(headers, "Content-length");
+            assertNotNull(length);
+
+            String date = httpFetcher.getHeadersLine(headers, "Date");
+            assertNotNull(date);
+
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try{
+                if (null != server)
+                    server.stop(0);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }   
+    }
 
 }

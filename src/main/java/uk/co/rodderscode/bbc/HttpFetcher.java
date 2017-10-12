@@ -1,5 +1,9 @@
 package uk.co.rodderscode.bbc;
 
+import org.apache.commons.collections.IterableMap;
+import org.apache.commons.collections.MapIterator;
+import org.apache.commons.collections.map.HashedMap;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,40 +16,6 @@ public class HttpFetcher {
     final private String eol = System.getProperty("line.separator");
     final public static String STATUSLINE = "status";
 
-    public LinkedHashMap<String, String> getHttpHeaders(String response) {
-
-        LinkedHashMap<String, String> headers = new LinkedHashMap<>();
-
-        int i = 0;
-        for (String line : response.split(eol))
-        {
-
-            if (line.length() < 1)
-                break;
-
-            if (i == 0){
-                headers.put(STATUSLINE, line);
-                i++;
-                continue;
-            }
-
-            String[] keyvalue = line.split(":");
-            headers.put(keyvalue[0], keyvalue[1]);
-            i++;
-
-        }
-
-        return headers;
-    }
-
-    public String getBody(String response) {
-
-        String[] splitResponse = response.split(eol+eol);
-        if (splitResponse.length > 1)
-            return splitResponse[1];
-
-        return "";
-    }
 
     public Map<String, List<String>> fetch(String url){
         try{
@@ -59,5 +29,32 @@ public class HttpFetcher {
         }
 
         return null;
+    }
+
+
+    public String getHeadersLine(Map<String, List<String>> headers, String keyName) {
+        String line = null;
+
+        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+
+            String key = entry.getKey();
+
+            // bypass status line
+            if (key == null){
+                if (keyName.equals(HttpFetcher.STATUSLINE))
+                    line = entry.getValue().toString();
+                continue;
+            }
+
+            if (key.equals(keyName)){
+                line = entry.getValue().toString();
+            }
+
+        }
+
+        if(line.length() > 0)
+            line = line.replace("[", "").replace("]", "");
+
+        return line;
     }
 }

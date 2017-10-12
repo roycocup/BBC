@@ -10,7 +10,8 @@ public class ServerHandler implements HttpHandler {
 
     public void handle(HttpExchange he) throws IOException {
         String response = "Server response";
-        he.sendResponseHeaders(200, response.length());
+        he.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
+        he.sendResponseHeaders(201, response.length());
         OutputStream os = he.getResponseBody();
         os.write(response.getBytes());
         os.close();
