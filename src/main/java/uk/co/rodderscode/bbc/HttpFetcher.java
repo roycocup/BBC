@@ -54,7 +54,7 @@ public class HttpFetcher {
             if(line.length() > 0)
                 line = line.replace("[", "").replace("]", "");
         } catch (Exception e) {
-            System.out.println("Line is null on: " + keyName);
+//            System.out.println("Line is null on: " + keyName);
         }
 
         return line;
